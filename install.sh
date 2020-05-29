@@ -1,39 +1,32 @@
 #!/usr/bin/env bash
 install_oh_my_zsh() {
   echo "Setting up zsh..." \
-  && rm -rf ~/.zshrc ~/.oh-my-zsh \
-  && ln -s $(pwd)/zsh/zshrc ~/.zshrc \
-  && git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh \
-  && chsh -s /bin/zsh \
-  && git clone git://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions \
-  && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting \
-  && ln -s $(pwd)/zsh/themes/* ~/.oh-my-zsh/custom/themes \
-  && rm -rf ~/z.sh \
-  && curl -fLo ~/z.sh https://raw.githubusercontent.com/rupa/z/master/z.sh
+    && rm -rf ~/.zshrc ~/.oh-my-zsh \
+    && ln -s $(pwd)/zsh/zshrc ~/.zshrc \
+    && git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh \
+    && chsh -s /bin/zsh \
+    && git clone git://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions \
+    && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting \
+    && ln -s $(pwd)/zsh/themes/* ~/.oh-my-zsh/custom/themes \
+    && rm -rf ~/z.sh \
+    && curl -fLo ~/z.sh https://raw.githubusercontent.com/rupa/z/master/z.sh
 }
 
 install_neovim() {
   echo "Setting up neovim..." \
-  && rm -rf ~/.config/nvim $(pwd)/nvim/pack ~/.fzf \
-  && ln -s $(pwd)/nvim ~/.config/nvim \
-  && git clone https://github.com/kristijanhusak/vim-packager.git ~/.config/nvim/pack/packager/opt/vim-packager \
-  && nvim -c 'PackagerInstall'
+    && sudo pacman -S neovim \
+    && rm -rf ~/.config/nvim $(pwd)/nvim/pack ~/.fzf \
+    && ln -s $(pwd)/nvim ~/.config/nvim \
+    && git clone https://github.com/kristijanhusak/vim-packager.git ~/.config/nvim/pack/packager/opt/vim-packager \
+    && nvim -c 'PackagerInstall'
 }
 
-install_ripgrep() {
+install_tools() {
   echo "Installing ripgrep..." \
-  && rm -f /usr/local/bin/rg \
-  && curl -L https://github.com/BurntSushi/ripgrep/releases/download/0.10.0/ripgrep-0.10.0-x86_64-unknown-linux-musl.tar.gz | tar zx \
-  && cp ripgrep-0.10.0-x86_64-unknown-linux-musl/rg /usr/local/bin \
-  && rm -rf ripgrep-0.10.0-x86_64-unknown-linux-musl
+    && sudo pacman -S ripgrep ctags nvm \
+    && echo 'source /usr/share/nvm/init-nvm.sh' >> ~/.zshrc
 }
 
-install_ctags() {
-  echo "Installing universal ctags..." \
-    && rm -rf ./ctags \
-    && git clone https://github.com/universal-ctags/ctags \
-    && cd ctags && ./autogen.sh && ./configure && make && sudo make install && cd ../ && rm -rf ctags
-}
 
 install_diff_so_fancy() {
   echo "Installing diff-so-fancy..." \
@@ -50,9 +43,19 @@ install_kitty() {
 
 install_i3() {
   rm -rf ~/.i3 \
-    && yaourt -S i3blocks-git kbdd-git \
-    && sudo pacman -S sysstat yad \
+    && yay -S kbdd-git \
+    && sudo pacman -S sysstat yad i3blocks \
     && ln -s $(pwd)/i3 ~/.i3
+}
+
+install_pyenv(){
+    echo "Installing pyenv..." \
+      && curl https://pyenv.run | bash \
+      && echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> ~/.zshrc \
+      && echo 'eval "$(pyenv init -)"' >> ~/.zshrc \
+      && echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshrc \
+      && source ~/.zshrc \
+      && pyenv install miniconda3-latest
 }
 
 if [[ -z $1 ]]; then
@@ -60,14 +63,14 @@ if [[ -z $1 ]]; then
   read answer
   if echo "$answer" | grep -iq "^y" ;then
     echo "Installing dependencies..." \
-    && install_i3 \
-    && install_oh_my_zsh \
-    && install_neovim \
-    && install_ripgrep \
-    && install_ctags \
-    && install_diff_so_fancy \
-    && install_kitty \
-    && echo "Finished installation."
+      && install_i3 \
+      && install_oh_my_zsh \
+      && install_tools \
+      && install_neovim \
+      && install_diff_so_fancy \
+      && install_kitty \
+      && install_pyenv \
+      && echo "Finished installation."
   fi
 else
   "install_$1" $1

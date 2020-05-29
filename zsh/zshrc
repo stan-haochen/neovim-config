@@ -32,11 +32,11 @@ alias install='sudo pacman -S'
 alias search='sudo pacman -Ss'
 alias remove='sudo pacman -R'
 alias update='sudo pacman -Sy'
-alias yinstall='yaourt -S'
-alias ysearch='yaourt -Ss'
-alias yremove='yaourt -R'
-alias yupdate='yaourt -Sy'
-alias c7="sudo chmod -R 777"
+alias yinstall='yay -S'
+alias ysearch='yay -Ss'
+alias yremove='yay -R'
+alias yupdate='yay -Sy'
+#alias c7="sudo chmod -R 777"
 alias l="ls -l"
 alias c="clear"
 alias www="cd /var/www"
@@ -44,10 +44,10 @@ alias weather="curl http://wttr.in/Novi sad"
 alias gs="git status"
 alias code="cd ~/code"
 alias lg="lazygit"
-alias resetbg="source ~/neovim-config/toggle_bg.sh"
-alias togglebg="source ~/neovim-config/toggle_bg.sh toggle"
+alias resetbg="source ~/code/tools/neovim-config/toggle_bg.sh"
+alias togglebg="source ~/code/tools/neovim-config/toggle_bg.sh toggle"
+alias anton="ssh stan@10.90.184.74"
 
-export PATH=$PATH:/usr/local/go/bin:~/go/bin:~/.local/bin
 export LESS=R
 export EDITOR=nvim
 export MANPAGER="nvim -c 'set ft=man' -"
@@ -67,12 +67,9 @@ else
 fi
 [ -f ~/.zsh_secret ] && source ~/.zsh_secret
 
-export NVM_DIR="/home/kristijan/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-eval $(keychain --eval --quiet ~/.ssh/id_rsa)
+# eval $(keychain --eval --quiet ~/.ssh/id_rsa)
 
 bindkey '^[[Z' reverse-menu-complete # Use shift tab for backward autocompletion
 
@@ -140,3 +137,9 @@ z() {
 }
 
 source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/nvm/init-nvm.sh
+
+# pyenv
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
